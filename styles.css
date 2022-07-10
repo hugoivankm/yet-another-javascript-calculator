@@ -4,6 +4,7 @@
   --accent-color-button: #c6642e;
   --secondary-color-button: #3f4a5d;
   --primary-color-button: #2b2b2b;
+  --click-color-button: #111111;
 }
 
 body {
@@ -20,6 +21,10 @@ body {
   height: 100%;
   justify-content: center;
   align-items: center;
+}
+
+.btn:active {
+  background-color: var(--click-color-button);
 }
 
 .btn--clear {
