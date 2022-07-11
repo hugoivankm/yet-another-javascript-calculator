@@ -71,7 +71,6 @@ decimal.addEventListener('click', () => {
     updateDisplay();
 });
 
-
 add.addEventListener('click', () => {
     displayContent += " + ";
     updateDisplay();
@@ -107,8 +106,9 @@ const updateDisplay = () => {
         updateDisplay();
     }
     if (displayContent.length <= displayMaxLength) {
-        display.textContent = displayContent;
-    }
+        console.log(parse(displayContent));
+        display.textContent = parse(displayContent).join(" ");
+    }   
 };
 
 const compute = (content) => {
@@ -119,25 +119,30 @@ const compute = (content) => {
     }
 };
 
-// const parse = (content) => {
-//     const tokenArray = content.split(" ");
-//     parsedTokenArray = tokenArray.map((token) => {
-//         let value = Number(token);
+const parse = (content) => {
+    const tokenArray = content.split(" ");
 
-//         if (Number.isInteger(value)) {
-//             return parseInt(token);
-//         }
-//         if (isFloat(value)) {
-//             return parseFloat(token);
-//         }
-//         if(/[*/+-]+/g.test(token)){
-//         return token;
-//         }
-//     });
-//     console.log(parsedTokenArray);
-//     return parsedTokenArray;
-// };
+    const filteredTokenArray = tokenArray.filter((token) => {
+        if ((!(token === '') && !(/\s+/g.test(token)))) {
+            return token;
+        }
+    });
+
+    let mappedTokenArray = filteredTokenArray.map((token) => {
+        let value = Number(token);
+        if (Number.isInteger(value)) {
+            return parseInt(token);
+        }
+        if (isFloat(value)) {
+            return parseFloat(token);
+        }
+        return token;
+    });
+    return mappedTokenArray;
+};
 
 const isFloat = (value) => {
     return (/^[0-9]?[.][0-9]+$/g.test(value));
 };
+
+
