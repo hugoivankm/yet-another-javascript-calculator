@@ -18,77 +18,50 @@ const add = document.querySelector('#add');
 const subtract = document.querySelector('#subtract');
 const divide = document.querySelector('#divide');
 const multiply = document.querySelector('#multiply');
-
-
+const decimal = document.querySelector('#decimal');
 const clear = document.querySelector('#clear');
 
-window.onload = function () {
-    updateDisplay();
-};
-one.addEventListener('click', () => {
-    displayContent += "1";
-    updateDisplay();
-});
-two.addEventListener('click', () => {
-    displayContent += "2";
-    updateDisplay();
-});
-three.addEventListener('click', () => {
-    displayContent += "3";
-    updateDisplay();
-});
-four.addEventListener('click', () => {
-    displayContent += "4";
-    updateDisplay();
-});
-five.addEventListener('click', () => {
-    displayContent += "5";
-    updateDisplay();
-});
-six.addEventListener('click', () => {
-    displayContent += "6";
-    updateDisplay();
-});
-seven.addEventListener('click', () => {
-    displayContent += "7";
-    updateDisplay();
-});
-eight.addEventListener('click', () => {
-    displayContent += "8";
-    updateDisplay();
-});
-nine.addEventListener('click', () => {
-    displayContent += "9";
-    updateDisplay();
-});
-zero.addEventListener('click', () => {
-    displayContent += "0";
-    updateDisplay();
-});
+
+let inputMap = new Map([
+    [one, '1'],
+    [two, '2'],
+    [three, '3'],
+    [four, '4'],
+    [five, '5'],
+    [six, '6'],
+    [seven, '7'],
+    [eight, '8'],
+    [nine, '9'],
+    [zero, '0'],
+    [add, '+'],
+    [subtract, '-'],
+    [divide, '/'],
+    [multiply, '*'],
+]);
+
+
+// TODO: Complete map iteration
+
+for(let entry of inputMap){
+    const key = entry[0];
+    const value = entry[1];
+
+    key.addEventListener('click', () => {
+        // TODO: DO this for every input to avoid empty display bug
+        if (displayContent === '0') {
+            displayContent = '';
+        }
+        displayContent += value;
+        updateDisplay();
+    });
+}
+
 
 decimal.addEventListener('click', () => {
-    
     let length = displayContent.length;
-    if (length === 0 || displayContent[length - 1] != '.'){
+    if (length === 0 || displayContent[length - 1] != '.') {
         displayContent += ".";
     }
-    updateDisplay();
-});
-
-add.addEventListener('click', () => {
-    displayContent += "+";
-    updateDisplay();
-});
-subtract.addEventListener('click', () => {
-    displayContent += "-";
-    updateDisplay();
-});
-multiply.addEventListener('click', () => {
-    displayContent += "*";
-    updateDisplay();
-});
-divide.addEventListener('click', () => {
-    displayContent += "/";
     updateDisplay();
 });
 
@@ -105,12 +78,16 @@ clear.addEventListener('click', () => {
 
 const updateDisplay = () => {
     if (displayContent === "") {
-        displayContent = "0";
+        displayContent = '0';
         updateDisplay();
     }
     if (displayContent.length <= displayMaxLength) {
         display.textContent = parse(displayContent).join(" ");
     }
+};
+
+window.onload = function () {
+    updateDisplay();
 };
 
 const compute = (content) => {
@@ -119,30 +96,6 @@ const compute = (content) => {
     } catch (exception) {
         return "error";
     }
-};
-
-const parse = (content) => {
-    const tokenArray = content.split(" ");
-
-    const filteredTokenArray = tokenArray.filter((token) => {
-        if ((!(token === '') && !(/\s+/g.test(token)))) {
-            return token;
-        }
-    });
-
-    let mappedTokenArray = filteredTokenArray.map((token) => {
-        console.log(token);
-        if (isInteger(token)) {
-            return parseInt(token);
-        }
-        if (isFloat(token)) {
-            console.log("t:", token);
-            return parseFloat(token);
-        }
-        return token;
-    });
-    console.log(mappedTokenArray);
-    return mappedTokenArray;
 };
 
 const isFloat = (token) => {
@@ -161,7 +114,6 @@ const isOperand = (token) => {
 
 const rules_filter = (tokenArray) => {
     tokenArray = tokenArray.reverse();
-
     let resultArray = tokenArray.filter((token, index) => {
         let prevToken = (index !== 0) ? tokenArray[index - 1] : '';
         if (isOperand(token)) {
@@ -178,7 +130,7 @@ const rules_filter = (tokenArray) => {
 };
 
 
-const parseSymbols = (expression) => {
+const parse = (expression) => {
     const symbolArray = [];
     let acc = "";
 
