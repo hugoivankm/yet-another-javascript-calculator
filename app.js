@@ -40,14 +40,10 @@ let inputMap = new Map([
 ]);
 
 
-// TODO: Complete map iteration
+for (let entry of inputMap) {
 
-for(let entry of inputMap){
-    const key = entry[0];
-    const value = entry[1];
-
+    const [key, value] = entry;
     key.addEventListener('click', () => {
-        // TODO: DO this for every input to avoid empty display bug
         if (displayContent === '0') {
             displayContent = '';
         }
@@ -82,7 +78,8 @@ const updateDisplay = () => {
         updateDisplay();
     }
     if (displayContent.length <= displayMaxLength) {
-        display.textContent = parse(displayContent).join(" ");
+        displayContent = parse(displayContent).join("");
+        display.textContent = displayContent;
     }
 };
 
@@ -94,7 +91,8 @@ const compute = (content) => {
     try {
         return math.evaluate(content);
     } catch (exception) {
-        return "error";
+        displayContent = '';
+        display.textContent = 'E';
     }
 };
 
@@ -116,6 +114,9 @@ const rules_filter = (tokenArray) => {
     tokenArray = tokenArray.reverse();
     let resultArray = tokenArray.filter((token, index) => {
         let prevToken = (index !== 0) ? tokenArray[index - 1] : '';
+        if (token === '') {
+            return false;
+        }
         if (isOperand(token)) {
             if (isOperand(prevToken)) {
                 return false;
@@ -123,9 +124,7 @@ const rules_filter = (tokenArray) => {
             return true;
         }
         return true;
-
     });
-
     return resultArray.reverse();
 };
 
@@ -143,7 +142,11 @@ const parse = (expression) => {
         }
 
         if (isDecimal(char)) {
-            if (!isDecimal(prevChar)) {
+            let accStr = acc.split("");
+
+            let hasPreviousDecimal = accStr.some((element, index) => accStr.lastIndexOf(element) != index);
+
+            if (!hasPreviousDecimal) {
                 acc += char;
             }
         }
@@ -155,6 +158,7 @@ const parse = (expression) => {
             acc = '';
             acc += char;
 
+
             symbolArray.push(acc);
             acc = '';
         }
@@ -164,6 +168,7 @@ const parse = (expression) => {
             acc = "";
         }
     }
+    console.log(symbolArray);
     return rules_filter(symbolArray);
 };
 
