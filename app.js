@@ -41,8 +41,8 @@ let inputMap = new Map([
 
 
 for (let entry of inputMap) {
-
     const [key, value] = entry;
+
     key.addEventListener('click', () => {
         if (displayContent === '0') {
             displayContent = '';
@@ -110,22 +110,28 @@ const isOperand = (token) => {
     return (/^[\-\+\*\/]$/g.test(token));
 }
 
-const rules_filter = (tokenArray) => {
+const operatorRules = (tokenArray) => {
     tokenArray = tokenArray.reverse();
     let resultArray = tokenArray.filter((token, index) => {
         let prevToken = (index !== 0) ? tokenArray[index - 1] : '';
-        if (token === '') {
-            return false;
-        }
+
         if (isOperand(token)) {
             if (isOperand(prevToken)) {
+                if (token !== '-' && prevToken === '-') {
+                    return true;
+                }
                 return false;
             }
             return true;
         }
+        if (token === '') {
+            return false;
+        }
         return true;
     });
-    return resultArray.reverse();
+    resultArray = resultArray.reverse();
+    console.log("resultArray: ", resultArray);
+    return resultArray;
 };
 
 
@@ -135,7 +141,7 @@ const parse = (expression) => {
 
     for (let i = 0; i < expression.length; i++) {
         let char = expression[i];
-        let prevChar = expression[i - 1];
+        let nextChar = expression[i + 1];
 
         if (isInteger(char)) {
             acc += char;
@@ -155,12 +161,13 @@ const parse = (expression) => {
             if (acc !== "") {
                 symbolArray.push(acc);
             }
+
             acc = '';
             acc += char;
 
-
             symbolArray.push(acc);
             acc = '';
+
         }
 
         if (i == (expression.length - 1)) {
@@ -168,8 +175,9 @@ const parse = (expression) => {
             acc = "";
         }
     }
-    console.log(symbolArray);
-    return rules_filter(symbolArray);
+    console.log("symbolArray: ", symbolArray);
+
+    return operatorRules(symbolArray);
 };
 
 
