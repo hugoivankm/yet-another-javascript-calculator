@@ -96,9 +96,7 @@ const compute = (content) => {
     }
 };
 
-const isFloat = (token) => {
-    return (/^[0-9]?[.][0-9]+$/g.test(token));
-};
+
 const isInteger = (token) => {
     return (/^[0-9]+$/g.test(token));
 };
