@@ -128,7 +128,6 @@ const operatorRules = (tokenArray) => {
         return true;
     });
     resultArray = resultArray.reverse();
-    console.log("resultArray: ", resultArray);
     return resultArray;
 };
 
@@ -144,10 +143,8 @@ const parse = (expression) => {
         if (isInteger(char)) {
             acc += char;
         }
-
         if (isDecimal(char)) {
             let accStr = acc.split("");
-
             let hasPreviousDecimal = accStr.some((element, index) => accStr.lastIndexOf(element) != index);
 
             if (!hasPreviousDecimal) {
@@ -173,8 +170,6 @@ const parse = (expression) => {
             acc = "";
         }
     }
-    console.log("symbolArray: ", symbolArray);
-
     return operatorRules(symbolArray);
 };
 
